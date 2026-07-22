@@ -75,7 +75,8 @@ jobs:
             --end "${{ steps.dates.outputs.END }}"
         env:
           SHOPIFY_STORE: ${{ secrets.KH_SHOPIFY_STORE }}
-          SHOPIFY_ACCESS_TOKEN: ${{ secrets.KH_SHOPIFY_ACCESS_TOKEN }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.KH_SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
 
       - name: 拉取营销日历
         run: |

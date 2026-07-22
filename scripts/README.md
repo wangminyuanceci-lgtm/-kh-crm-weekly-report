@@ -31,7 +31,8 @@ git push -u origin main
 | `FEISHU_APP_SECRET` | 同上 | 飞书应用密钥 |
 | `FEISHU_CHAT_ID` | 运营群 → 设置 → 群 ID | 固定值：`oc_26d179f6e297fa35731cf03cd6a5a118` |
 | `KH_SHOPIFY_STORE` | Shopify 店铺域名前缀 | `kangaroohoppers` |
-| `KH_SHOPIFY_ACCESS_TOKEN` | Shopify 后台 → 应用 → 管理私密应用 | Admin API 只读权限 |
+| `KH_SHOPIFY_CLIENT_ID` | Shopify 后台 → 应用 → Dev Dashboard | OAuth Client ID |
+| `KH_SHOPIFY_CLIENT_SECRET` | 同上 | OAuth Client Secret |
 
 ### 3. Klaviyo API Key 权限
 
