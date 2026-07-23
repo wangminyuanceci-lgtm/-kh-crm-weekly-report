@@ -15,19 +15,19 @@ remote:
 remote:       —— Shopify App Shared Secret —————————————————————————        
 remote:        locations:        
 remote:          - commit: 95289de95da4565da509eefcee63729511daed55        
-remote:            path: .claude/skills/shopify-readonly-query/SKILL.md:16        
+remote:            path: .claude/skills/kh-shopify-readonly-query/SKILL.md:16        
 remote:             
 remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        
-remote:        https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/security/secret-scanning/unblock-secret/3GsoF08uQw6GkkVeOXy797OXpXl        
+remote:        https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/security/secret-scanning/unblock-secret/3GsoF0hIrzZvHz9m0x2TWcak2tr        
 remote:             
 remote:             
 remote:       —— Shopify App Shared Secret —————————————————————————        
 remote:        locations:        
 remote:          - commit: 95289de95da4565da509eefcee63729511daed55        
-remote:            path: .claude/skills/kh-shopify-readonly-query/SKILL.md:16        
+remote:            path: .claude/skills/shopify-readonly-query/SKILL.md:16        
 remote:             
 remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        
-remote:        https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/security/secret-scanning/unblock-secret/3GsoF0hIrzZvHz9m0x2TWcak2tr        
+remote:        https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/security/secret-scanning/unblock-secret/3GsoF08uQw6GkkVeOXy797OXpXl        
 remote:             
 remote: 
 remote: 

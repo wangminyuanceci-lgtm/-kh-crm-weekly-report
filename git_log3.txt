@@ -1,0 +1,6 @@
+95289de fix: remove cache config and env expression from workflow
+e8d2d36 test: add name, env, schedule, inputs to try.yml
+0e6bb79 test: minimal workflow
+bf59527 fix: heredoc indentation and npm ci lock file
+8ad7a4e feat: add Shopify OAuth client credentials support
+a72f094 init: KH CRM weekly report automation

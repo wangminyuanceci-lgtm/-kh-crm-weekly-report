@@ -1,8 +1,6 @@
 name: KH CRM Weekly Report Test
 
 on:
-  schedule:
-    - cron: '0 5 * * 1'
   workflow_dispatch:
     inputs:
       date_start:
@@ -25,4 +23,42 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "structure ok"
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装依赖
+        run: |
+          cd scripts
+          npm install
+          npm install -g @larksuite/cli
+
+      - name: 初始化飞书 CLI
+        run: |
+          echo "${{ secrets.FEISHU_APP_SECRET }}" | \
+            lark-cli config init \
+              --app-id "${{ secrets.FEISHU_APP_ID }}" \
+              --app-secret-stdin \
+              --brand feishu
+
+      - name: 配置日期
+        id: dates
+        run: |
+          if [ "${{ github.event.inputs.date_start }}" != "" ]; then
+            echo "START=${{ github.event.inputs.date_start }}" >> $GITHUB_OUTPUT
+            echo "END=${{ github.event.inputs.date_end }}" >> $GITHUB_OUTPUT
+          else
+            START=$(TZ='Asia/Shanghai' date -d 'last monday -7 days' '+%Y-%m-%d')
+            END=$(TZ='Asia/Shanghai' date -d 'last monday -1 days' '+%Y-%m-%d')
+            echo "START=$START" >> $GITHUB_OUTPUT
+            echo "END=$END" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 生成周报
+        run: |
+          cd scripts
+          node generate-report.mjs \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}"
