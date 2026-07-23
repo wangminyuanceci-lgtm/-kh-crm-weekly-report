@@ -13,6 +13,9 @@ on:
         description: 'Report end date (YYYY-MM-DD), leave blank for auto'
         required: false
         type: string
+  push:
+    paths:
+      - .github/workflows/weekly-crm-report.yml
 
 env:
   NODE_VERSION: '20'
@@ -56,6 +59,7 @@ jobs:
           fi
 
       - name: Pull Klaviyo data
+        continue-on-error: true
         run: |
           cd scripts
           node pull-klaviyo.mjs \
@@ -65,6 +69,7 @@ jobs:
           KLAVIYO_PRIVATE_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
 
       - name: Pull Shopify GMV
+        continue-on-error: true
         run: |
           cd scripts
           node pull-shopify.mjs \
@@ -76,6 +81,7 @@ jobs:
           SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
 
       - name: Pull marketing calendar
+        continue-on-error: true
         run: |
           cd scripts
           node pull-calendar.mjs \
