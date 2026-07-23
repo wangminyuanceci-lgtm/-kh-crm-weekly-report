@@ -29,12 +29,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: scripts/package-lock.json
+          cache-dependency-path: scripts/package.json
 
       - name: 安装依赖
         run: |
           cd scripts
-          npm ci
+          npm install
           npm install -g @larksuite/cli
 
       - name: 初始化飞书 CLI
@@ -152,17 +152,20 @@ jobs:
           FMT_FLOW=$(python3 -c "print(f'\${float($FLOW_REV):,.0f}')")
           FMT_GMV=$(python3 -c "print(f'\${float($GMV):,.0f}')")
 
-          cat > /tmp/kh_msg.md << MSGEOF
-        **📊 KH CRM ${WEEK} 周报已发布**
-        周期：${{ steps.dates.outputs.START }} ~ ${{ steps.dates.outputs.END }}
+          python3 -c "
+msg = f'''**📊 KH CRM ${WEEK} 周报已发布**
+周期：${{ steps.dates.outputs.START }} ~ ${{ steps.dates.outputs.END }}
 
-        **📈 核心数据：**
-        • EDM 总收入：**${FMT_REV}**
-        • Campaign 收入：${FMT_CAMP} | Flow 收入：${FMT_FLOW}
-        • Shopify GMV：${FMT_GMV}
+**📈 核心数据：**
+• EDM 总收入：**${FMT_REV}**
+• Campaign 收入：${FMT_CAMP} | Flow 收入：${FMT_FLOW}
+• Shopify GMV：${FMT_GMV}
 
-        📎 [完整报告](${DOC_URL})
-        MSGEOF
+📎 [完整报告](${DOC_URL})
+'''
+with open('/tmp/kh_msg.md','w') as f:
+    f.write(msg)
+"
 
           lark-cli im +messages-send \
             --chat-id "${{ secrets.FEISHU_CHAT_ID }}" \
