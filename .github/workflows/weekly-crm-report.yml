@@ -145,6 +145,7 @@ jobs:
             --doc-id "${{ env.DOC_ID }}"
 
       - name: Push to operations group
+        continue-on-error: true
         run: |
           if [ -f "/tmp/kh_msg.md" ]; then
             lark-cli im +messages-send \
