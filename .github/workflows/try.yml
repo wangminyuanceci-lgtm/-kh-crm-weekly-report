@@ -1,82 +1,20 @@
-name: KH CRM Weekly Report Test
+name: Minimal f-string Test
 
 on:
-  workflow_dispatch:
-    inputs:
-      date_start:
-        description: '报告起始日 (YYYY-MM-DD)'
-        required: false
-        type: string
-      date_end:
-        description: '报告结束日 (YYYY-MM-DD)'
-        required: false
-        type: string
   push:
     paths:
       - .github/workflows/try.yml
-
-env:
-  NODE_VERSION: '20'
-  LARK_CLI_NO_PROXY: '1'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: echo test
+        run: echo "basic"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: 安装依赖
+      - name: python f-string with expressions
         run: |
-          cd scripts
-          npm install
-          npm install -g @larksuite/cli
-
-      - name: 初始化飞书 CLI
-        run: |
-          echo "${{ secrets.FEISHU_APP_SECRET }}" | \
-            lark-cli config init \
-              --app-id "${{ secrets.FEISHU_APP_ID }}" \
-              --app-secret-stdin \
-              --brand feishu
-
-      - name: 配置日期
-        id: dates
-        run: |
-          if [ "${{ github.event.inputs.date_start }}" != "" ]; then
-            echo "START=${{ github.event.inputs.date_start }}" >> $GITHUB_OUTPUT
-            echo "END=${{ github.event.inputs.date_end }}" >> $GITHUB_OUTPUT
-          else
-            START=$(TZ='Asia/Shanghai' date -d 'last monday -7 days' '+%Y-%m-%d')
-            END=$(TZ='Asia/Shanghai' date -d 'last monday -1 days' '+%Y-%m-%d')
-            echo "START=$START" >> $GITHUB_OUTPUT
-            echo "END=$END" >> $GITHUB_OUTPUT
-          fi
-
-      - name: 测试推送消息格式
-        run: |
-          START_DATE="${{ steps.dates.outputs.START }}"
-          END_DATE="${{ steps.dates.outputs.END }}"
-          echo "START=$START_DATE END=$END_DATE"
-
-          WEEK=$(python3 -c "from datetime import datetime; d=datetime.strptime('${{ steps.dates.outputs.END }}','%Y-%m-%d'); print(f'W{d.isocalendar()[1]:02d}')")
-          echo "WEEK=$WEEK"
-
-          DOC_ID="test123"
-          DOC_URL="https://ritfitsports.feishu.cn/docx/${DOC_ID}"
-
-          FMT_REV="0"
-          FMT_CAMP="0"
-          FMT_FLOW="0"
-          FMT_GMV="0"
-
+          echo "hello"
           python3 -c "
-msg = f'''**TEST ${WEEK}**
-周期：${{ steps.dates.outputs.START }} ~ ${{ steps.dates.outputs.END }}
-Total: ${FMT_REV}
-'''
-print(msg)
+print('test')
 "
