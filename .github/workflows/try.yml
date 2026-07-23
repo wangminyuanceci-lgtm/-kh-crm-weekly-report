@@ -34,9 +34,52 @@ jobs:
           cd scripts
           npm install
 
-      - name: 测试 step env with secrets
+      - name: 配置日期
+        id: dates
         run: |
-          echo "Testing env with secrets"
-          echo "KEY_LENGTH=${#TEST_KEY}"
+          if [ "${{ github.event.inputs.date_start }}" != "" ]; then
+            echo "START=${{ github.event.inputs.date_start }}" >> $GITHUB_OUTPUT
+            echo "END=${{ github.event.inputs.date_end }}" >> $GITHUB_OUTPUT
+          else
+            START=$(TZ='Asia/Shanghai' date -d 'last monday -7 days' '+%Y-%m-%d')
+            END=$(TZ='Asia/Shanghai' date -d 'last monday -1 days' '+%Y-%m-%d')
+            echo "START=$START" >> $GITHUB_OUTPUT
+            echo "END=$END" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 拉取 Klaviyo 数据
+        run: |
+          cd scripts
+          node pull-klaviyo.mjs \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}"
         env:
-          TEST_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
+          KLAVIYO_PRIVATE_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
+
+      - name: 拉取 Shopify GMV
+        run: |
+          cd scripts
+          node pull-shopify.mjs \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}"
+        env:
+          SHOPIFY_STORE: ${{ secrets.KH_SHOPIFY_STORE }}
+          SHOPIFY_CLIENT_ID: ${{ secrets.KH_SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
+
+      - name: 拉取营销日历
+        run: |
+          cd scripts
+          node pull-calendar.mjs \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}"
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+
+      - name: 上传报告产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: kh-crm-report-test
+          path: scripts/*.md
+          retention-days: 30
