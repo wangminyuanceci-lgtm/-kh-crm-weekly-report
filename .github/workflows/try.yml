@@ -33,6 +33,15 @@ jobs:
         run: |
           cd scripts
           npm install
+          npm install -g @larksuite/cli
+
+      - name: 初始化飞书 CLI
+        run: |
+          echo "${{ secrets.FEISHU_APP_SECRET }}" | \
+            lark-cli config init \
+              --app-id "${{ secrets.FEISHU_APP_ID }}" \
+              --app-secret-stdin \
+              --brand feishu
 
       - name: 配置日期
         id: dates
@@ -76,6 +85,54 @@ jobs:
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+
+      - name: 生成周报
+        run: |
+          cd scripts
+          node generate-report.mjs \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}"
+
+      - name: 发布到飞书文档
+        run: |
+          cd scripts
+          REPORT_FILE=$(ls kh-crm-weekly-*.md 2>/dev/null | head -1)
+          if [ -z "$REPORT_FILE" ]; then
+            echo "NO_REPORT_FILE"
+            exit 1
+          fi
+          WEEK=$(echo "$REPORT_FILE" | sed 's/kh-crm-weekly-//' | sed 's/\.md//')
+
+          DOC_RESULT=$(lark-cli docs +create \
+            --api-version v2 \
+            --content "<title>KH CRM Weekly Performance Report - ${WEEK}</title><p></p>" \
+            --parent-token KezUf0UI2lR27KdfBK8c4napnUh)
+          echo "$DOC_RESULT"
+          DOC_ID=$(echo "$DOC_RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['document']['document_id'])")
+          echo "DOC_ID=$DOC_ID" >> $GITHUB_ENV
+
+          lark-cli docs +update \
+            --doc "$DOC_ID" \
+            --command append \
+            --content @"$REPORT_FILE" \
+            --doc-format markdown \
+            --api-version v2
+
+      - name: 写入 Bitable
+        run: |
+          cd scripts
+          if [ -f "bitable-campaign.json" ]; then
+            lark-cli base +record-batch-create \
+              --base-token F2pVbsy0OaaocEsQeuYcJKkHnBI \
+              --table-id tblladSdv4Aj4Zgm \
+              --json @bitable-campaign.json
+          fi
+          if [ -f "bitable-flow.json" ]; then
+            lark-cli base +record-batch-create \
+              --base-token F2pVbsy0OaaocEsQeuYcJKkHnBI \
+              --table-id tbl2RUsiYrn7zFTq \
+              --json @bitable-flow.json
+          fi
 
       - name: 上传报告产物
         uses: actions/upload-artifact@v4
