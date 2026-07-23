@@ -1,0 +1,11 @@
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/try.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ok"
