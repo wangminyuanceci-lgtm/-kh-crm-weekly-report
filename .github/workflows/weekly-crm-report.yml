@@ -27,9 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: scripts/package.json
+          node-version: '20'
 
       - name: 安装依赖
         run: |

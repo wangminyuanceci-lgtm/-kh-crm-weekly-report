@@ -1,0 +1,11 @@
+{
+  "appId": "cli_aa87d12afa39dcbd",
+  "appSecret": "****",
+  "brand": "feishu",
+  "lang": "zh",
+  "profile": "cli_aa87d12afa39dcbd",
+  "users": "王敏园 (ou_e1bba1d955a2b1ace5e73911b991f518)",
+  "workspace": "local"
+}
+
+Config file path: C:\Users\Admin\.lark-cli\config.json

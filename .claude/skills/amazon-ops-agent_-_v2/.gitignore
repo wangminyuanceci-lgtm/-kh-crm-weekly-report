@@ -1,0 +1,11 @@
+# 密钥库 + 审计日志 严禁入库
+.agent_keys.json
+.agent_audit.log
+
+# MySQL 缓存数据
+data/cache/
+
+# Python 缓存
+scripts/__pycache__/
+**/__pycache__/
+*.pyc

@@ -1,0 +1,79 @@
+{
+  total_count: int,
+  workflow_runs:
+  [
+    {
+      actor:
+      {
+        avatar_url: string[53],
+        events_url: string[66],
+        followers_url: string[59],
+        following_url: string[72],
+        gists_url: string[65],
+        gravatar_id: string,
+        html_url: url,
+        id: int,
+        login: string,
+        node_id: string,
+        organizations_url: string[54],
+        received_events_url: string[65],
+        repos_url: string[55],
+        site_admin: bool,
+        starred_url: string[72],
+        subscriptions_url: string[63],
+        ... +3 more keys
+      }
+      artifacts_url: string[106],
+      cancel_url: string[103],
+      check_suite_id: int,
+      check_suite_node_id: string,
+      check_suite_url: string[96],
+      conclusion: string,
+      created_at: string,
+      display_title: string,
+      event: string,
+      head_branch: string,
+      head_commit:
+      {
+        author:
+        {
+          email: string,
+          name: string
+        }
+        committer:
+        {
+          email: string,
+          name: string
+        }
+        id: string,
+        message: string,
+        timestamp: string,
+        tree_id: string
+      }
+      head_repository:
+      {
+        archive_url: string[94],
+        assignees_url: string[88],
+        blobs_url: string[87],
+        branches_url: string[89],
+        collaborators_url: string[100],
+        comments_url: string[89],
+        commits_url: string[85],
+        compare_url: string[95],
+        contents_url: string[88],
+        contributors_url: string[84],
+        deployments_url: string[83],
+        description: null,
+        downloads_url: string[81],
+        events_url: string[78],
+        fork: bool,
+        forks_url: string[77],
+        ... +30 more keys
+      }
+      head_sha: string,
+      html_url: string[86],
+      id: int,
+      ... +19 more keys
+    }
+  ]
+}

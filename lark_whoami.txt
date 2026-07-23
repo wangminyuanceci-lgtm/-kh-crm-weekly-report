@@ -1,0 +1,14 @@
+{
+  "profile": "cli_aa87d12afa39dcbd",
+  "appId": "cli_aa87d12afa39dcbd",
+  "brand": "feishu",
+  "defaultAs": "auto",
+  "identity": "user",
+  "identitySource": "auto_detect",
+  "available": true,
+  "tokenStatus": "needs_refresh",
+  "onBehalfOf": {
+    "userName": "王敏园",
+    "openId": "ou_e1bba1d955a2b1ace5e73911b991f518"
+  }
+}
