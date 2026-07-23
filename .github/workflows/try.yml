@@ -1,6 +1,7 @@
-name: Minimal f-string Test
+name: KH CRM Weekly Report Test
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - .github/workflows/try.yml
@@ -9,12 +10,4 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: echo test
-        run: echo "basic"
-
-      - name: python f-string with expressions
-        run: |
-          echo "hello"
-          python3 -c "
-print('test')
-"
+      - run: echo "ok"

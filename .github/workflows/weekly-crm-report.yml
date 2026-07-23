@@ -2,16 +2,15 @@ name: KH CRM Weekly Report
 
 on:
   schedule:
-    # 每周一北京时间 13:00 = 05:00 UTC
     - cron: '0 5 * * 1'
   workflow_dispatch:
     inputs:
       date_start:
-        description: '报告起始日 (YYYY-MM-DD)，留空自动计算上周一'
+        description: 'Report start date (YYYY-MM-DD), leave blank for auto'
         required: false
         type: string
       date_end:
-        description: '报告结束日 (YYYY-MM-DD)，留空自动计算上周日'
+        description: 'Report end date (YYYY-MM-DD), leave blank for auto'
         required: false
         type: string
 
@@ -29,13 +28,13 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 安装依赖
+      - name: Install dependencies
         run: |
           cd scripts
           npm install
           npm install -g @larksuite/cli
 
-      - name: 初始化飞书 CLI
+      - name: Init Feishu CLI
         run: |
           echo "${{ secrets.FEISHU_APP_SECRET }}" | \
             lark-cli config init \
@@ -43,7 +42,7 @@ jobs:
               --app-secret-stdin \
               --brand feishu
 
-      - name: 配置日期
+      - name: Configure dates
         id: dates
         run: |
           if [ "${{ github.event.inputs.date_start }}" != "" ]; then
@@ -56,7 +55,7 @@ jobs:
             echo "END=$END" >> $GITHUB_OUTPUT
           fi
 
-      - name: 拉取 Klaviyo 数据
+      - name: Pull Klaviyo data
         run: |
           cd scripts
           node pull-klaviyo.mjs \
@@ -65,7 +64,7 @@ jobs:
         env:
           KLAVIYO_PRIVATE_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
 
-      - name: 拉取 Shopify GMV
+      - name: Pull Shopify GMV
         run: |
           cd scripts
           node pull-shopify.mjs \
@@ -76,7 +75,7 @@ jobs:
           SHOPIFY_CLIENT_ID: ${{ secrets.KH_SHOPIFY_CLIENT_ID }}
           SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
 
-      - name: 拉取营销日历
+      - name: Pull marketing calendar
         run: |
           cd scripts
           node pull-calendar.mjs \
@@ -86,31 +85,29 @@ jobs:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
 
-      - name: 生成周报
+      - name: Generate weekly report
         run: |
           cd scripts
           node generate-report.mjs \
             --start "${{ steps.dates.outputs.START }}" \
             --end "${{ steps.dates.outputs.END }}"
 
-      - name: 发布到飞书文档
+      - name: Publish to Feishu Doc
         run: |
           cd scripts
           REPORT_FILE=$(ls kh-crm-weekly-*.md 2>/dev/null | head -1)
           if [ -z "$REPORT_FILE" ]; then
-            echo "❌ 未找到报告文件"
-            exit 1
+            echo "No report file found, skipping doc publish"
+            exit 0
           fi
           WEEK=$(echo "$REPORT_FILE" | sed 's/kh-crm-weekly-//' | sed 's/\.md//')
-
           DOC_RESULT=$(lark-cli docs +create \
             --api-version v2 \
-            --content "<title>KH CRM Weekly Performance Report - ${WEEK}</title><p></p>" \
+            --content "<title>KH CRM Weekly Report - ${WEEK}</title><p></p>" \
             --parent-token KezUf0UI2lR27KdfBK8c4napnUh)
           echo "$DOC_RESULT"
           DOC_ID=$(echo "$DOC_RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['document']['document_id'])")
           echo "DOC_ID=$DOC_ID" >> $GITHUB_ENV
-
           lark-cli docs +update \
             --doc "$DOC_ID" \
             --command append \
@@ -118,7 +115,7 @@ jobs:
             --doc-format markdown \
             --api-version v2
 
-      - name: 写入 Bitable
+      - name: Write to Bitable
         run: |
           cd scripts
           if [ -f "bitable-campaign.json" ]; then
@@ -134,42 +131,24 @@ jobs:
               --json @bitable-flow.json
           fi
 
-      - name: 推送运营群
+      - name: Build notification message
         run: |
-          WEEK=$(python3 -c "from datetime import datetime; d=datetime.strptime('${{ steps.dates.outputs.END }}','%Y-%m-%d'); print(f'W{d.isocalendar()[1]:02d}')")
-          DOC_ID="${{ env.DOC_ID }}"
-          DOC_URL="https://ritfitsports.feishu.cn/docx/${DOC_ID}"
+          python3 scripts/build-notify.py \
+            --start "${{ steps.dates.outputs.START }}" \
+            --end "${{ steps.dates.outputs.END }}" \
+            --doc-id "${{ env.DOC_ID }}"
 
-          CAMP_REV=$(python3 -c "import json; d=json.load(open('scripts/klaviyo-data.json')); print(sum(c.get('attributes',{}).get('conversion_value',0) for c in d.get('campaigns',[])))" 2>/dev/null || echo 0)
-          FLOW_REV=$(python3 -c "import json; d=json.load(open('scripts/klaviyo-data.json')); print(sum(f.get('attributes',{}).get('conversion_value',0) for f in d.get('flows',[])))" 2>/dev/null || echo 0)
-          TOTAL_REV=$(python3 -c "print($CAMP_REV + $FLOW_REV)" 2>/dev/null || echo 0)
-          GMV=$(cat scripts/shopify-gmv.txt 2>/dev/null || echo 0)
+      - name: Push to operations group
+        run: |
+          if [ -f "/tmp/kh_msg.md" ]; then
+            lark-cli im +messages-send \
+              --chat-id "${{ secrets.FEISHU_CHAT_ID }}" \
+              --markdown @/tmp/kh_msg.md
+          else
+            echo "No message file, skipping push"
+          fi
 
-          FMT_REV=$(python3 -c "print(f'\${float($TOTAL_REV):,.0f}')")
-          FMT_CAMP=$(python3 -c "print(f'\${float($CAMP_REV):,.0f}')")
-          FMT_FLOW=$(python3 -c "print(f'\${float($FLOW_REV):,.0f}')")
-          FMT_GMV=$(python3 -c "print(f'\${float($GMV):,.0f}')")
-
-          python3 -c "
-msg = f'''**📊 KH CRM ${WEEK} 周报已发布**
-周期：${{ steps.dates.outputs.START }} ~ ${{ steps.dates.outputs.END }}
-
-**📈 核心数据：**
-• EDM 总收入：**${FMT_REV}**
-• Campaign 收入：${FMT_CAMP} | Flow 收入：${FMT_FLOW}
-• Shopify GMV：${FMT_GMV}
-
-📎 [完整报告](${DOC_URL})
-'''
-with open('/tmp/kh_msg.md','w') as f:
-    f.write(msg)
-"
-
-          lark-cli im +messages-send \
-            --chat-id "${{ secrets.FEISHU_CHAT_ID }}" \
-            --markdown @/tmp/kh_msg.md
-
-      - name: 上传报告产物
+      - name: Upload report artifact
         uses: actions/upload-artifact@v4
         with:
           name: kh-crm-report-${{ steps.dates.outputs.START }}
