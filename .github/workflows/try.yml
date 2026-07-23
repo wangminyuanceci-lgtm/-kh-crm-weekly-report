@@ -56,87 +56,27 @@ jobs:
             echo "END=$END" >> $GITHUB_OUTPUT
           fi
 
-      - name: 拉取 Klaviyo 数据
+      - name: 测试推送消息格式
         run: |
-          cd scripts
-          node pull-klaviyo.mjs \
-            --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
-        env:
-          KLAVIYO_PRIVATE_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
+          START_DATE="${{ steps.dates.outputs.START }}"
+          END_DATE="${{ steps.dates.outputs.END }}"
+          echo "START=$START_DATE END=$END_DATE"
 
-      - name: 拉取 Shopify GMV
-        run: |
-          cd scripts
-          node pull-shopify.mjs \
-            --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
-        env:
-          SHOPIFY_STORE: ${{ secrets.KH_SHOPIFY_STORE }}
-          SHOPIFY_CLIENT_ID: ${{ secrets.KH_SHOPIFY_CLIENT_ID }}
-          SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
+          WEEK=$(python3 -c "from datetime import datetime; d=datetime.strptime('${{ steps.dates.outputs.END }}','%Y-%m-%d'); print(f'W{d.isocalendar()[1]:02d}')")
+          echo "WEEK=$WEEK"
 
-      - name: 拉取营销日历
-        run: |
-          cd scripts
-          node pull-calendar.mjs \
-            --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
-        env:
-          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
-          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          DOC_ID="test123"
+          DOC_URL="https://ritfitsports.feishu.cn/docx/${DOC_ID}"
 
-      - name: 生成周报
-        run: |
-          cd scripts
-          node generate-report.mjs \
-            --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
+          FMT_REV="0"
+          FMT_CAMP="0"
+          FMT_FLOW="0"
+          FMT_GMV="0"
 
-      - name: 发布到飞书文档
-        run: |
-          cd scripts
-          REPORT_FILE=$(ls kh-crm-weekly-*.md 2>/dev/null | head -1)
-          if [ -z "$REPORT_FILE" ]; then
-            echo "NO_REPORT_FILE"
-            exit 1
-          fi
-          WEEK=$(echo "$REPORT_FILE" | sed 's/kh-crm-weekly-//' | sed 's/\.md//')
-
-          DOC_RESULT=$(lark-cli docs +create \
-            --api-version v2 \
-            --content "<title>KH CRM Weekly Performance Report - ${WEEK}</title><p></p>" \
-            --parent-token KezUf0UI2lR27KdfBK8c4napnUh)
-          echo "$DOC_RESULT"
-          DOC_ID=$(echo "$DOC_RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['document']['document_id'])")
-          echo "DOC_ID=$DOC_ID" >> $GITHUB_ENV
-
-          lark-cli docs +update \
-            --doc "$DOC_ID" \
-            --command append \
-            --content @"$REPORT_FILE" \
-            --doc-format markdown \
-            --api-version v2
-
-      - name: 写入 Bitable
-        run: |
-          cd scripts
-          if [ -f "bitable-campaign.json" ]; then
-            lark-cli base +record-batch-create \
-              --base-token F2pVbsy0OaaocEsQeuYcJKkHnBI \
-              --table-id tblladSdv4Aj4Zgm \
-              --json @bitable-campaign.json
-          fi
-          if [ -f "bitable-flow.json" ]; then
-            lark-cli base +record-batch-create \
-              --base-token F2pVbsy0OaaocEsQeuYcJKkHnBI \
-              --table-id tbl2RUsiYrn7zFTq \
-              --json @bitable-flow.json
-          fi
-
-      - name: 上传报告产物
-        uses: actions/upload-artifact@v4
-        with:
-          name: kh-crm-report-test
-          path: scripts/*.md
-          retention-days: 30
+          python3 -c "
+msg = f'''**TEST ${WEEK}**
+周期：${{ steps.dates.outputs.START }} ~ ${{ steps.dates.outputs.END }}
+Total: ${FMT_REV}
+'''
+print(msg)
+"
