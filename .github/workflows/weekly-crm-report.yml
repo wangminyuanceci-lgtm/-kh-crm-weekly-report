@@ -13,6 +13,9 @@ on:
         description: 'Report end date (YYYY-MM-DD), leave blank for auto'
         required: false
         type: string
+  push:
+    paths:
+      - .github/workflows/weekly-crm-report.yml
 
 env:
   NODE_VERSION: '20'
