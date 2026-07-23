@@ -1,0 +1,177 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 89105839643,
+      "run_id": 29975351434,
+      "workflow_name": "KH CRM Weekly Report",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/runs/29975351434",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTexv_c8AAAAUvx82Gw",
+      "head_sha": "3debfd5a146d48d0bc92c26bf91c0fbbce14ad91",
+      "url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/jobs/89105839643",
+      "html_url": "https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/runs/29975351434/job/89105839643",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-07-23T02:48:56Z",
+      "started_at": "2026-07-23T02:48:58Z",
+      "completed_at": "2026-07-23T02:49:15Z",
+      "name": "generate-report",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-07-23T02:48:59Z",
+          "completed_at": "2026-07-23T02:49:00Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-07-23T02:49:00Z",
+          "completed_at": "2026-07-23T02:49:02Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-07-23T02:49:02Z",
+          "completed_at": "2026-07-23T02:49:06Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-07-23T02:49:06Z",
+          "completed_at": "2026-07-23T02:49:08Z"
+        },
+        {
+          "name": "Init Feishu CLI",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-07-23T02:49:08Z",
+          "completed_at": "2026-07-23T02:49:10Z"
+        },
+        {
+          "name": "Configure dates",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-07-23T02:49:10Z",
+          "completed_at": "2026-07-23T02:49:10Z"
+        },
+        {
+          "name": "Pull Klaviyo data",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-07-23T02:49:10Z",
+          "completed_at": "2026-07-23T02:49:10Z"
+        },
+        {
+          "name": "Pull Shopify GMV",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-07-23T02:49:10Z",
+          "completed_at": "2026-07-23T02:49:12Z"
+        },
+        {
+          "name": "Pull marketing calendar",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-07-23T02:49:12Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Generate weekly report",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 10,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Publish to Feishu Doc",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Write to Bitable",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Build notification message",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Push to operations group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Upload report artifact",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-07-23T02:49:13Z",
+          "completed_at": "2026-07-23T02:49:13Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/check-runs/89105839643",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000009,
+      "runner_name": "GitHub Actions 1000000009",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

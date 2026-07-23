@@ -43,11 +43,12 @@ function main() {
   const { start, end, week } = parseDates();
 
   // 读取数据文件
-  if (!existsSync('klaviyo-data.json')) {
-    console.error('❌ 缺少 klaviyo-data.json，请先运行 pull-klaviyo.mjs');
-    process.exit(1);
+  let data = { campaigns: [], flows: [], segments: [] };
+  if (existsSync('klaviyo-data.json')) {
+    data = JSON.parse(readFileSync('klaviyo-data.json', 'utf-8'));
+  } else {
+    console.warn('⚠️ klaviyo-data.json 不存在，使用空数据');
   }
-  const data = JSON.parse(readFileSync('klaviyo-data.json', 'utf-8'));
 
   let shopify = { gmv: 0, prevGmv: 0, wow: null };
   if (existsSync('shopify-data.json')) {

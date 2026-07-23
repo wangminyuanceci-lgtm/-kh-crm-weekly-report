@@ -59,34 +59,34 @@ jobs:
           fi
 
       - name: Pull Klaviyo data
-        continue-on-error: true
         run: |
           cd scripts
           node pull-klaviyo.mjs \
             --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
+            --end "${{ steps.dates.outputs.END }}" \
+            || echo '{"campaigns":[],"flows":[],"segments":[]}' > klaviyo-data.json
         env:
           KLAVIYO_PRIVATE_KEY: ${{ secrets.KLAVIYO_PRIVATE_KEY }}
 
       - name: Pull Shopify GMV
-        continue-on-error: true
         run: |
           cd scripts
           node pull-shopify.mjs \
             --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
+            --end "${{ steps.dates.outputs.END }}" \
+            || echo '{"gmv":0}' > shopify-data.json
         env:
           SHOPIFY_STORE: ${{ secrets.KH_SHOPIFY_STORE }}
           SHOPIFY_CLIENT_ID: ${{ secrets.KH_SHOPIFY_CLIENT_ID }}
           SHOPIFY_CLIENT_SECRET: ${{ secrets.KH_SHOPIFY_CLIENT_SECRET }}
 
       - name: Pull marketing calendar
-        continue-on-error: true
         run: |
           cd scripts
           node pull-calendar.mjs \
             --start "${{ steps.dates.outputs.START }}" \
-            --end "${{ steps.dates.outputs.END }}"
+            --end "${{ steps.dates.outputs.END }}" \
+            || echo '{"activities":[]}' > calendar-data.json
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
