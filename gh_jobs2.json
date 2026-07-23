@@ -1,0 +1,113 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 89101556409,
+      "run_id": 29973907306,
+      "workflow_name": "KH CRM Weekly Report Test",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/runs/29973907306",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTexv_c8AAAAUvt3auQ",
+      "head_sha": "03b082d7cb46077d0322d4f68c8230e03f68389a",
+      "url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/jobs/89101556409",
+      "html_url": "https://github.com/wangminyuanceci-lgtm/-kh-crm-weekly-report/actions/runs/29973907306/job/89101556409",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-07-23T02:14:54Z",
+      "started_at": "2026-07-23T02:14:56Z",
+      "completed_at": "2026-07-23T02:15:07Z",
+      "name": "test",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-07-23T02:14:56Z",
+          "completed_at": "2026-07-23T02:14:57Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-07-23T02:14:57Z",
+          "completed_at": "2026-07-23T02:14:58Z"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-07-23T02:14:58Z",
+          "completed_at": "2026-07-23T02:15:02Z"
+        },
+        {
+          "name": "安装依赖",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-07-23T02:15:02Z",
+          "completed_at": "2026-07-23T02:15:04Z"
+        },
+        {
+          "name": "初始化飞书 CLI",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-07-23T02:15:04Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        },
+        {
+          "name": "配置日期",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-07-23T02:15:06Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        },
+        {
+          "name": "生成周报",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7,
+          "started_at": "2026-07-23T02:15:06Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-07-23T02:15:06Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-07-23T02:15:06Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-07-23T02:15:06Z",
+          "completed_at": "2026-07-23T02:15:06Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/wangminyuanceci-lgtm/-kh-crm-weekly-report/check-runs/89101556409",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000002,
+      "runner_name": "GitHub Actions 1000000002",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}
